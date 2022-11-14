@@ -9,26 +9,18 @@ function Add() {
   const [val, setval] = useState("");
   const [data, setdata] = useState([]);
   const textRef = useRef("");
-  // const submitForm = () => {
-  //   if (val!="")
-  //   {setdata([...data, val]);
-  //   textRef.current.value =" ";
-  //   setval("")}
-  //   else
-  //   {
-  //     alert("Enter valid input");
-  //   }
-  // };
 
-  const submitForm = () => {
-    const requesthandler={
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:val})
-    }
+  const submitForm = async () => {
+    const requesthandler = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: val }),
+    };
 
-    fetch('/itemid/add', requesthandler).then(response=>response.json());
-  }
+    await fetch("/itemid/add", requesthandler).then((response) =>
+      response.json()
+    );
+  };
 
   function logout() {
     localStorage.setItem("flag", false);
@@ -36,18 +28,20 @@ function Add() {
     navigate("/");
   }
 
-   useEffect(()=>{
-    fetch('/itemid/add').then(res=>{
-      if(res.ok){
-        return res.json();
-      }
-    }).then(item=>setdata(item.data))
-  },[data])
+  useEffect(() => {
+    fetch("/itemid/add")
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((item) => setdata(item.data));
+  }, [data]);
 
   return (
     <>
       <div className="holderblock">
-        <Button variant="contained"  color="inherit" onClick={logout}>
+        <Button variant="contained" color="inherit" onClick={logout}>
           Logout
         </Button>
       </div>

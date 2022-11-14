@@ -7,9 +7,19 @@ function List(props) {
   const [flag, setFlag] = useState(false);
   const { list, setdata, reference } = props;
 
+  // function deletes(index) {
+  //   list.splice(index, 1)
+  //   setdata([...list]);
+  // }
+
   function deletes(index) {
-    list.splice(index, 1)
-    setdata([...list]);
+    const requesthandler = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: index }),
+    };
+
+    fetch("/itemid/remove", requesthandler).then((res) => res.json());
   }
 
   function edit(item, index) {
@@ -19,23 +29,29 @@ function List(props) {
   }
 
   function Change() {
-    list[indexval] = reference.current.value;
-    setdata([...list]);
+    const itemvalue = reference.current.value;
+    const requesthandler = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: itemvalue, id: indexval }),
+    };
+
+    fetch("/itemid/edit", requesthandler).then((res) => res.json());
+    // setdata([...list]);
     setFlag(false);
-    reference.current.value =" ";
+    reference.current.value = " ";
     console.log(list);
   }
 
-
-  useEffect(()=>{
-    fetch('/itemid/item').then(res=>{
-      if(res.ok){
-        return res.json();
-      }
-    }).then(item=>setdata(item.data))
-  },[list])
-
-
+  useEffect(() => {
+    fetch("/itemid/item")
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((item) => setdata(item.data));
+  }, [list]);
 
   return (
     <>
@@ -53,15 +69,24 @@ function List(props) {
             <div className="holder">
               {index + 1}.{item.item}
               <div class="btncover">
-              {!flag && <Button onClick={() => deletes(index)} variant="contained" color="error">
-                  Remove
-                </Button>}
+                {!flag && (
+                  <Button
+                    onClick={() => deletes(item.id)}
+                    variant="contained"
+                    color="error"
+                  >
+                    Remove
+                  </Button>
+                )}
               </div>
               <div class="btncover">
-                <Button onClick={() => edit(item.id, index)} variant="contained" color="info">
+                <Button
+                  onClick={() => edit(item.item, item.id)}
+                  variant="contained"
+                  color="info"
+                >
                   Edit
                 </Button>
-          
               </div>
             </div>
           ))}
