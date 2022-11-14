@@ -1,14 +1,21 @@
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import { useState} from 'react';
 import "./signin.css";
 
 function Signin() {
   const navigate = useNavigate();
+  const [value, setvalue] = useState("");
+  const [password, setpass] = useState("");
 
   function submitform() {
+    if((value==="") || (password ==="")){
+      alert("please enter valid input")
+    }
+    else{
     localStorage.setItem("flag", true);
-    navigate("/add");
+    navigate("/add");}
   }
 
   return (
@@ -22,6 +29,7 @@ function Signin() {
               id="outlined-basic"
               label="Username"
               variant="outlined"
+              onChange={(e)=>setvalue(e.target.value)}
             />
           </div>
           <br></br>
@@ -31,6 +39,7 @@ function Signin() {
               id="outlined-basic"
               label="Password"
               variant="outlined"
+              onChange={(e)=>setpass(e.target.value)}
             />{" "}
           </div>
           <br></br>

@@ -8,9 +8,14 @@ function Add() {
   const navigate = useNavigate();
   const [val, setval] = useState("");
   const [data, setdata] = useState([]);
+  const [fetchflag, setFetchflag] = useState(false);
   const textRef = useRef("");
 
   const submitForm = async () => {
+    if ( textRef.current.value===""){
+      alert("try again");
+    }
+    else{
     const requesthandler = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -20,6 +25,9 @@ function Add() {
     await fetch("/itemid/add", requesthandler).then((response) =>
       response.json()
     );
+    setFetchflag(!fetchflag);
+  setval(" ");
+  }
   };
 
   function logout() {
@@ -64,7 +72,7 @@ function Add() {
         </div>
       </div>
 
-      <List list={data} setdata={setdata} reference={textRef}></List>
+      <List list={data} setdata={setdata} reference={textRef} fetchflag={fetchflag} setFetchflag={setFetchflag}></List>
     </>
   );
 }

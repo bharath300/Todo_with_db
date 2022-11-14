@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 function List(props) {
   const [indexval, setIndex] = useState(0);
   const [flag, setFlag] = useState(false);
-  const { list, setdata, reference } = props;
+  
+  const { list, setdata, reference, fetchflag, setFetchflag } = props;
 
   // function deletes(index) {
   //   list.splice(index, 1)
@@ -20,6 +21,8 @@ function List(props) {
     };
 
     fetch("/itemid/remove", requesthandler).then((res) => res.json());
+    setFetchflag(!fetchflag);
+    reference.current.value = " ";
   }
 
   function edit(item, index) {
@@ -29,6 +32,11 @@ function List(props) {
   }
 
   function Change() {
+    if ( reference.current.value===""){
+      alert("try again");
+    }
+    else{
+
     const itemvalue = reference.current.value;
     const requesthandler = {
       method: "POST",
@@ -37,10 +45,10 @@ function List(props) {
     };
 
     fetch("/itemid/edit", requesthandler).then((res) => res.json());
-    // setdata([...list]);
+    setFetchflag(!fetchflag);
     setFlag(false);
     reference.current.value = " ";
-    console.log(list);
+    console.log(list); }
   }
 
   useEffect(() => {
@@ -51,7 +59,7 @@ function List(props) {
         }
       })
       .then((item) => setdata(item.data));
-  }, [list]);
+  }, [fetchflag]);
 
   return (
     <>
